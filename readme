@@ -1,0 +1,73 @@
+# VoxBlink2 Downloader – Quick Guide
+
+This script downloads and cuts audio utterances from YouTube videos using
+VoxBlink2-style metadata. It uses **yt-dlp**, **ffmpeg**, and parallel processing
+to generate clean, per-utterance WAV files.
+
+---
+
+## Requirements
+
+Install Python packages:
+
+pip install -r requirements.txt
+
+yaml
+Copy code
+
+Make sure the following system tools are installed:
+
+- **ffmpeg** available in PATH  
+  Check: `ffmpeg -version`
+- **yt-dlp** installed globally  
+  Install: `pip install -U yt-dlp`
+
+---
+
+## Meta Folder Structure
+
+Your `meta` directory must be organized like this:
+
+meta/
+speaker_1/
+VIDEO_ID_xxxxx/
+0001.txt
+0002.txt
+...
+speaker_2/
+VIDEO_ID_yyyyy/
+...
+
+sql
+Copy code
+
+### Each `.txt` file
+Represents one utterance and must contain a start and end time or start + duration.
+
+Example valid formats:
+
+Start and Duration: 12.34 3.21
+
+Copy code
+{"start": 12.34, "end": 15.55}
+
+Copy code
+12.34 15.55
+
+python
+Copy code
+
+The **video directory name must contain a valid YouTube 11-character ID.**
+
+---
+
+## Configuration
+
+Edit these lines at the top of the script:
+
+```python
+META_SRC = Path(r"...")   # Path to meta folder or meta.tar.gz
+SAVE_DIR = Path(r"...")   # Output directory for clips
+TMP_DIR  = Path(r"...")   # Temporary working directory
+WORKERS  = 10             # Parallel videos
+DIRECT_CUT = True         # Cut directly from remote audio
